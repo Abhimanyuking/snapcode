@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="8" fill="url(#fav-grad)"/>
+  <!-- Viewfinder corners (screenshot concept) -->
+  <path d="M6 11V8.5C6 7.12 7.12 6 8.5 6H11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M21 6h2.5C24.88 6 26 7.12 26 8.5V11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M6 21v2.5C6 24.88 7.12 26 8.5 26H11" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M21 26h2.5c1.38 0 2.5-1.12 2.5-2.5V21" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Code angle brackets (code concept) -->
+  <path d="M14 11L10 16l4 5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M18 11l4 5-4 5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <defs>
+    <linearGradient id="fav-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#ec4899"/>
+    </linearGradient>
+  </defs>
+</svg>

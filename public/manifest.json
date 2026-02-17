@@ -1,0 +1,17 @@
+{
+  "name": "SnapCode — Screenshot to Code",
+  "short_name": "SnapCode",
+  "description": "Upload any UI screenshot and get clean, responsive code instantly.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#a855f7",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

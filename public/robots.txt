@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /result/
+
+Sitemap: https://snapcode.dev/sitemap.xml
