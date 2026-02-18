@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { allowed, remaining } = rateLimit(ip);
+    const { allowed, remaining } = await rateLimit(ip);
     if (!allowed) {
       return Response.json(
         { error: "Too many requests. Please wait a minute and try again.", success: false },
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const authCtx = await getAuthContext(headersList);
 
     if (!authCtx.isAuthenticated) {
-      const daily = dailyLimitCheck(ip);
+      const daily = await dailyLimitCheck(ip);
       if (!daily.allowed) {
         return Response.json(
           { error: "Daily limit reached. Come back tomorrow or upgrade to Pro!", success: false },
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
 
     // Edit limit: free=3 per conversion, pro/team=unlimited
     if (authCtx.limits.editLimit !== Infinity && resultId) {
-      const editLimit = editLimitCheck(ip, resultId);
+      const editLimit = await editLimitCheck(ip, resultId);
       if (!editLimit.allowed) {
         return Response.json(
           { error: "You've used all 3 free edits for this conversion. Generate a new one or upgrade to Pro!", success: false, editLimitReached: true },
@@ -121,10 +121,10 @@ Return the COMPLETE updated code:`;
     const newCode = cleanCode(rawCode);
 
     if (!authCtx.isAuthenticated) {
-      dailyLimitIncrement(ip);
+      await dailyLimitIncrement(ip);
     }
     if (authCtx.limits.editLimit !== Infinity && resultId) {
-      editLimitIncrement(ip, resultId);
+      await editLimitIncrement(ip, resultId);
     }
 
     return Response.json(

@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const { allowed, remaining } = rateLimit(ip);
+    const { allowed, remaining } = await rateLimit(ip);
     if (!allowed) {
       return Response.json(
         { error: "Too many requests. Please wait a minute and try again.", success: false },
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
       }
     } else {
       // Anonymous: IP-based daily limit
-      const daily = dailyLimitCheck(ip);
+      const daily = await dailyLimitCheck(ip);
       if (!daily.allowed) {
         return Response.json(
           { error: "You've used all 10 free conversions for today. Sign up or come back tomorrow!", success: false },
@@ -157,7 +157,7 @@ export async function POST(req: Request) {
       await connectDB();
       await User.findByIdAndUpdate(authCtx.userId, { $inc: { dailyGenerations: 1 } });
     } else {
-      dailyLimitIncrement(ip);
+      await dailyLimitIncrement(ip);
     }
 
     return Response.json(

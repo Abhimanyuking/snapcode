@@ -1,94 +1,75 @@
-// WARNING: In-memory rate limiting. On serverless (Vercel), this resets on cold starts.
-// For production, migrate to Redis/Upstash KV.
+import { getRedis } from "./redis";
 
-// Per-minute rate limiter
-const requests = new Map<string, number[]>();
-
-const WINDOW_MS = 60 * 1000; // 1 minute
+const WINDOW_SECONDS = 60;
 const MAX_REQUESTS = 10; // 10 requests per minute per IP
 
-export function rateLimit(ip: string): { allowed: boolean; remaining: number } {
-  const now = Date.now();
-  const timestamps = requests.get(ip) || [];
+export async function rateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+  const redis = getRedis();
+  const key = `rl:min:${ip}`;
+  const count = await redis.incr(key);
 
-  const valid = timestamps.filter((t) => now - t < WINDOW_MS);
+  if (count === 1) {
+    await redis.expire(key, WINDOW_SECONDS);
+  }
 
-  if (valid.length >= MAX_REQUESTS) {
-    requests.set(ip, valid);
+  if (count > MAX_REQUESTS) {
     return { allowed: false, remaining: 0 };
   }
 
-  valid.push(now);
-  requests.set(ip, valid);
-
-  // Cleanup expired entries periodically
-  if (requests.size > 200) {
-    for (const [key, val] of requests) {
-      if (val.every((t) => now - t >= WINDOW_MS)) {
-        requests.delete(key);
-      }
-    }
-  }
-
-  return { allowed: true, remaining: MAX_REQUESTS - valid.length };
+  return { allowed: true, remaining: MAX_REQUESTS - count };
 }
 
-// ── Daily generation limit (5 per day per IP for free tier) ──
-const dailyUsage = new Map<string, { count: number; resetAt: number }>();
+// ── Daily generation limit (10 per day per IP for free tier) ──
 
 const DAILY_LIMIT = 10;
 
 /** Check if daily limit allows a request (does NOT increment counter) */
-export function dailyLimitCheck(ip: string): { allowed: boolean; remaining: number } {
-  const now = Date.now();
+export async function dailyLimitCheck(ip: string): Promise<{ allowed: boolean; remaining: number }> {
+  const redis = getRedis();
+  const key = `rl:daily:${ip}`;
+  const count = await redis.get<number>(key);
 
-  // Cleanup expired daily entries periodically
-  if (dailyUsage.size > 200) {
-    for (const [key, val] of dailyUsage) {
-      if (now >= val.resetAt) {
-        dailyUsage.delete(key);
-      }
-    }
-  }
-
-  const entry = dailyUsage.get(ip);
-
-  if (!entry || now >= entry.resetAt) {
+  if (count === null) {
     return { allowed: true, remaining: DAILY_LIMIT };
   }
 
-  if (entry.count >= DAILY_LIMIT) {
+  if (count >= DAILY_LIMIT) {
     return { allowed: false, remaining: 0 };
   }
 
-  return { allowed: true, remaining: DAILY_LIMIT - entry.count };
+  return { allowed: true, remaining: DAILY_LIMIT - count };
 }
 
 /** Increment daily counter after successful generation */
-export function dailyLimitIncrement(ip: string): void {
-  const now = Date.now();
-  const entry = dailyUsage.get(ip);
+export async function dailyLimitIncrement(ip: string): Promise<void> {
+  const redis = getRedis();
+  const key = `rl:daily:${ip}`;
+  const count = await redis.incr(key);
 
-  if (!entry || now >= entry.resetAt) {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    dailyUsage.set(ip, { count: 1, resetAt: tomorrow.getTime() });
-    return;
+  if (count === 1) {
+    // Set expiry to midnight UTC
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+    tomorrow.setUTCHours(0, 0, 0, 0);
+    const secondsUntilMidnight = Math.ceil((tomorrow.getTime() - now.getTime()) / 1000);
+    await redis.expire(key, secondsUntilMidnight);
   }
-
-  entry.count++;
 }
 
 // ── AI Edit limit (3 per conversion for free tier) ──
-const editUsage = new Map<string, number>(); // key: ip:resultId -> count
 
 const EDIT_LIMIT_PER_CONVERSION = 3;
 
 /** Check if edit limit allows a request for a specific conversion */
-export function editLimitCheck(ip: string, resultId: string): { allowed: boolean; remaining: number } {
-  const key = `${ip}:${resultId}`;
-  const count = editUsage.get(key) || 0;
+export async function editLimitCheck(ip: string, resultId: string): Promise<{ allowed: boolean; remaining: number }> {
+  const redis = getRedis();
+  const key = `rl:edit:${ip}:${resultId}`;
+  const count = await redis.get<number>(key);
+
+  if (count === null) {
+    return { allowed: true, remaining: EDIT_LIMIT_PER_CONVERSION };
+  }
 
   if (count >= EDIT_LIMIT_PER_CONVERSION) {
     return { allowed: false, remaining: 0 };
@@ -98,17 +79,14 @@ export function editLimitCheck(ip: string, resultId: string): { allowed: boolean
 }
 
 /** Increment edit counter after successful edit */
-export function editLimitIncrement(ip: string, resultId: string): void {
-  const key = `${ip}:${resultId}`;
-  const count = editUsage.get(key) || 0;
-  editUsage.set(key, count + 1);
+export async function editLimitIncrement(ip: string, resultId: string): Promise<void> {
+  const redis = getRedis();
+  const key = `rl:edit:${ip}:${resultId}`;
+  const count = await redis.incr(key);
 
-  // Cleanup old entries (keep max 500)
-  if (editUsage.size > 500) {
-    const keys = [...editUsage.keys()];
-    for (let i = 0; i < keys.length - 300; i++) {
-      editUsage.delete(keys[i]);
-    }
+  if (count === 1) {
+    // Edit keys expire after 24 hours (auto-cleanup)
+    await redis.expire(key, 86400);
   }
 }
 

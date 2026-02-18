@@ -12,6 +12,7 @@
     "@auth/mongodb-adapter": "^3.11.1",
     "@monaco-editor/react": "^4.7.0",
     "@stackblitz/sdk": "^1.11.0",
+    "@upstash/redis": "^1.36.2",
     "@vercel/analytics": "^1.6.1",
     "bcryptjs": "^3.0.3",
     "file-saver": "^2.0.5",
