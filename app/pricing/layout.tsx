@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pricing — SnapCode",
-  description: "Simple, transparent pricing. Start free with 10 conversions per day. No hidden fees, cancel anytime.",
+  title: "Pricing — Screenshot to Code AI Tool | SnapCode",
+  description: "Free screenshot to code converter with 10 conversions/day. Upgrade to Pro for unlimited conversions, React & Next.js support. No hidden fees.",
 };
 
 export default function PricingLayout({ children }: { children: React.ReactNode }) {

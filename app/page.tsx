@@ -356,6 +356,7 @@ export default function Home() {
             Screenshot <span className="text-[#a855f7]">→</span>{" "}
             <TypewriterWord words={ROTATING_WORDS} />
           </h1>
+          <span className="sr-only">Screenshot to Code - Free AI Converter. Convert any UI screenshot to HTML, React, and Next.js code instantly.</span>
 
           {/* Glowing line separator */}
           <div className="line-glow max-w-xs sm:max-w-md mx-auto mb-6 sm:mb-8" />
