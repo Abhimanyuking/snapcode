@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "Figma to code",
     "screenshot to HTML",
   ],
-  metadataBase: new URL("https://snapcode.dev"),
+  metadataBase: new URL("https://techtonichub.xyz"),
   alternates: {
     canonical: "/",
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: "Drop any UI screenshot and get production-ready code instantly.",
     type: "website",
     siteName: "SnapCode",
-    url: "https://snapcode.dev",
+    url: "https://techtonichub.xyz",
     images: [
       {
         url: "/og-image.png",
@@ -87,7 +87,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebApplication",
               name: "SnapCode",
-              url: "https://snapcode.dev",
+              url: "https://techtonichub.xyz",
               description: "Upload any UI screenshot and get clean, responsive code instantly.",
               applicationCategory: "DeveloperApplication",
               operatingSystem: "Web",

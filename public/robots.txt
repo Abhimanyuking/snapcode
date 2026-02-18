@@ -3,4 +3,4 @@ Allow: /
 Disallow: /api/
 Disallow: /result/
 
-Sitemap: https://snapcode.dev/sitemap.xml
+Sitemap: https://techtonichub.xyz/sitemap.xml

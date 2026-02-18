@@ -81,7 +81,7 @@ export default function PrivacyPage() {
           </p>
 
           <p className="text-gray-600 mt-12">
-            Questions? Contact us at hello@snapcode.dev
+            Questions? Contact us at hello@techtonichub.xyz
           </p>
         </div>
       </div>

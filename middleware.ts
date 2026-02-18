@@ -3,10 +3,9 @@ import type { NextRequest } from "next/server";
 
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
-  "https://snapcode.dev",
-  "https://snapcode.ai",
-  "https://www.snapcode.dev",
-  "https://www.snapcode.ai",
+  "https://techtonichub.xyz",
+  "https://www.techtonichub.xyz",
+  "https://snapcode-ai.netlify.app",
 ];
 
 export function middleware(request: NextRequest) {

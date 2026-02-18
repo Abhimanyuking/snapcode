@@ -5,7 +5,7 @@ import { Check, Link, Twitter } from "lucide-react";
 
 export default function ShareCard() {
   const [copied, setCopied] = useState(false);
-  const [siteUrl, setSiteUrl] = useState("https://snapcode.dev");
+  const [siteUrl, setSiteUrl] = useState("https://techtonichub.xyz");
 
   useEffect(() => {
     setSiteUrl(window.location.origin);
