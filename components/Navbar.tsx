@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Menu, X, Sparkles, LogIn } from "lucide-react";
@@ -89,26 +90,15 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-14 sm:h-16">
 
             {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group min-h-[44px]">
-              <div className="relative">
-                <div className="relative bg-gradient-to-br from-[#8b5cf6] to-[#a855f7] p-1.5 rounded-xl">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 8V5.5C3 4.12 4.12 3 5.5 3H8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                    <path d="M16 3h2.5C19.88 3 21 4.12 21 5.5V8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                    <path d="M3 16v2.5C3 19.88 4.12 21 5.5 21H8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                    <path d="M16 21h2.5c1.38 0 2.5-1.12 2.5-2.5V16" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                    <path d="M10.5 8.5L7 12l3.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M13.5 8.5L17 12l-3.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-              </div>
-              <span className="text-lg sm:text-xl font-bold hidden min-[340px]:inline">
-                Snap<span className="gradient-text navbar-text-glow">Code</span>
-              </span>
-              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full navbar-v5-badge text-white shadow-sm shadow-purple-500/20">
-                <Sparkles className="w-3 h-3" />
-                v16
-              </span>
+            <Link href="/" className="flex items-center group min-h-[44px]">
+              <Image
+                src="/logo.png"
+                alt="HotChat Logo"
+                width={140}
+                height={48}
+                className="h-10 sm:h-12 w-auto object-contain"
+                priority
+              />
             </Link>
 
             {/* ── Desktop / Tablet Nav ── */}
@@ -287,23 +277,13 @@ export default function Navbar() {
                 <div className="navbar-gradient-line h-[2px] w-full shrink-0" />
 
                 <div className="flex items-center justify-between px-5 h-14 border-b border-white/[0.06]">
-                  <span className="text-sm font-semibold text-white flex items-center gap-2">
-                    <div className="relative">
-                      <div className="absolute -inset-0.5 rounded-md navbar-logo-glow opacity-30 blur-sm" />
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
-                        <path d="M3 8V5.5C3 4.12 4.12 3 5.5 3H8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                        <path d="M16 3h2.5C19.88 3 21 4.12 21 5.5V8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                        <path d="M3 16v2.5C3 19.88 4.12 21 5.5 21H8" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                        <path d="M16 21h2.5c1.38 0 2.5-1.12 2.5-2.5V16" stroke="white" strokeWidth="1.8" strokeLinecap="round"/>
-                        <path d="M10.5 8.5L7 12l3.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M13.5 8.5L17 12l-3.5 3.5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    Snap<span className="gradient-text">Code</span>
-                    <span className="inline-flex items-center text-[9px] font-semibold px-1.5 py-px rounded-full navbar-v5-badge text-white">
-                      v16
-                    </span>
-                  </span>
+                  <Image
+                    src="/logo.png"
+                    alt="HotChat Logo"
+                    width={100}
+                    height={34}
+                    className="h-8 w-auto object-contain"
+                  />
                   <button
                     ref={closeButtonRef}
                     onClick={closeMobile}
